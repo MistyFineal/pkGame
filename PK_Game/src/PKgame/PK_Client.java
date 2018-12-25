@@ -27,45 +27,34 @@ public class PK_Client {
             String serverName = reader.readLine();
             socket = new Socket(serverName, 5572);
             System.out.println("クライアントからの接続成功");
+            System.out.println("他のプレイヤーを待機しています");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        String result;
-        String result2;
-        int inputage;
-        Integer data;
-        Integer data2;
+        Integer send;
+        String recieve;
+        int input;
         try {
-
+            ois = new ObjectInputStream((socket.getInputStream()));
             oos = new ObjectOutputStream(socket.getOutputStream());
 
+            String ready = (String)ois.readObject();        //プレイヤーが揃ったときのメッセージ受信
+            System.out.println(ready);
 
-            System.out.print("1 - 6から選んでください >");
-            inputage = Integer.parseInt(reader.readLine());
-
-            data = new Integer(inputage);
-
-
-            oos.writeObject(data);
-            oos.flush();
-
-
-            ois = new ObjectInputStream(socket.getInputStream());
-            result = (String) ois.readObject();
-            System.out.println(result);
-
-
-            while (true) {
-                System.out.print(":1 - 6から選んでください >");
-                inputage = Integer.parseInt(reader.readLine());
-                data2 = new Integer(inputage);
-                oos.writeObject(data2);
+            boolean loop = true;
+            while (loop) {
+                input = 0;
+                recieve = (String)ois.readObject();
+                System.out.println(recieve);
+                while( ! (1 <= input && input <= 6) ) {
+                    System.out.print(":1 - 6から選んでください >");
+                    input = Integer.parseInt(reader.readLine());
+                }
+                send = new Integer(input);
+                oos.writeObject(send);
                 oos.flush();
-                result2 = (String) ois.readObject();
-                System.out.println(result2);
             }
-
         }
         catch (java.net.SocketException soe) {
             soe.printStackTrace();
