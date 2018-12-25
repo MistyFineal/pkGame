@@ -10,11 +10,11 @@ public class Controller {
     @FXML
     private Label label;
 
-    //private PK_sampleClient pkClient;
+    private PK_Client pkClient;
 
     public void ok_Click()
     {
-        //pkClient = new PK_sampleClient();
-        //label.setText("");
+        pkClient = new PK_Client();
+//        label.setText("");
     }
 }
