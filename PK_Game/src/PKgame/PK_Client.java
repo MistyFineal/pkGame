@@ -1,5 +1,6 @@
 package PKgame;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,13 +10,23 @@ import java.net.Socket;
 
 
 public class PK_Client {
+    private String ipAddress;
 
-    public static void main(String arg[]) {
+    private Controller ctrl;
+
+    public static void main (String args[]) {
         new PK_Client();
     }
 
-
+    public PK_Client(String ip, Controller c) {
+        this.ipAddress = ip;
+        ctrl = c;
+    }
     public PK_Client() {
+        start();
+    }
+
+    public void start() {
         BufferedReader reader = null;
         Socket socket = null;
         ObjectOutputStream oos = null;
@@ -24,10 +35,13 @@ public class PK_Client {
         try {
             reader = new BufferedReader(new InputStreamReader(System.in));
             System.out.print("Server name? >");
-            String serverName = reader.readLine();
+            //String serverName = reader.readLine();
+            String serverName = ipAddress;
             socket = new Socket(serverName, 5572);
-            System.out.println("クライアントからの接続成功");
+            System.out.println("サーバへの接続成功");
+            ctrl.sendMessageToGUI("サーバへの接続成功");
             System.out.println("他のプレイヤーを待機しています");
+            ctrl.sendMessageToGUI("他のプレイヤーを待機しています");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,16 +53,19 @@ public class PK_Client {
             ois = new ObjectInputStream((socket.getInputStream()));
             oos = new ObjectOutputStream(socket.getOutputStream());
 
+
             String ready = (String)ois.readObject();        //プレイヤーが揃ったときのメッセージ受信
             System.out.println(ready);
+            ctrl.sendMessageToGUI(ready);
 
             boolean loop = true;
             while (loop) {
                 input = 0;
                 recieve = (String)ois.readObject();
                 System.out.println(recieve);
+                ctrl.sendMessageToGUI(recieve);
                 while( ! (1 <= input && input <= 6) ) {
-                    System.out.print(":1 - 6から選んでください >");
+                    System.out.print("1 - 6から選んでください >");
                     input = Integer.parseInt(reader.readLine());
                 }
                 send = new Integer(input);
