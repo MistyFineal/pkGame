@@ -9,24 +9,28 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 
-public class PK_Client {
+public class PK_ClientRunnable implements  Runnable{
     private String ipAddress;
 
     private Controller ctrl;
 
     public static void main (String args[]) {
-        new PK_Client();
+        //new PK_ClientRunnable();
     }
 
-    public PK_Client(String ip, Controller c) {
+    public PK_ClientRunnable(String ip, Controller c) {
         this.ipAddress = ip;
         ctrl = c;
-    }
-    public PK_Client() {
-        start();
+        Thread th = new Thread(this, "th" + ip);
+        th.start();
     }
 
-    public void start() {
+    public PK_ClientRunnable() {
+        //start();
+    }
+
+    @Override
+    public void run() {
         BufferedReader reader = null;
         Socket socket = null;
         ObjectOutputStream oos = null;
@@ -112,4 +116,5 @@ public class PK_Client {
             }
         }
     }
+
 }
