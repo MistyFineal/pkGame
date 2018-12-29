@@ -1,6 +1,15 @@
 package PKgame;
 
 
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,24 +19,17 @@ import java.net.Socket;
 
 
 public class PK_ClientRunnable implements  Runnable{
-    private String ipAddress;
+    private Socket soc;
+    Controller ctrl;
 
-    private Controller ctrl;
 
-    public static void main (String args[]) {
-        //new PK_ClientRunnable();
-    }
-
-    public PK_ClientRunnable(String ip, Controller c) {
-        this.ipAddress = ip;
-        ctrl = c;
-        Thread th = new Thread(this, "th" + ip);
+    public PK_ClientRunnable(Socket socket, Controller c) {
+        this.soc = socket;
+        this.ctrl = c;
+        Thread th = new Thread(this, "th-" + soc.getInetAddress().toString());
         th.start();
     }
 
-    public PK_ClientRunnable() {
-        //start();
-    }
 
     @Override
     public void run() {
@@ -37,18 +39,22 @@ public class PK_ClientRunnable implements  Runnable{
         ObjectInputStream ois = null;
 
         try {
-            reader = new BufferedReader(new InputStreamReader(System.in));
-            System.out.print("Server name? >");
+            //reader = new BufferedReader(new InputStreamReader(System.in));
+            //System.out.print("Server name? >");
             //String serverName = reader.readLine();
-            String serverName = ipAddress;
-            socket = new Socket(serverName, 5572);
+            //String serverName = ipAddress;
+            //socket = new Socket(serverName, 5572);
+            socket = this.soc;
             System.out.println("サーバへの接続成功");
-            ctrl.sendMessageToGUI("サーバへの接続成功");
+            Platform.runLater(() -> ctrl.sendMessageToGUI("サーバへの接続成功"));
+            //ctrl.sendMessageToGUI("サーバへの接続成功");
             System.out.println("他のプレイヤーを待機しています");
-            ctrl.sendMessageToGUI("他のプレイヤーを待機しています");
+            //ctrl.sendMessageToGUI("他のプレイヤーを待機しています");
+            Platform.runLater(() ->ctrl.sendMessageToGUI("他のプレイヤーを待機しています"));
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
         Integer send;
         String recieve;
@@ -58,17 +64,17 @@ public class PK_ClientRunnable implements  Runnable{
             oos = new ObjectOutputStream(socket.getOutputStream());
 
 
-            String ready = (String)ois.readObject();        //プレイヤーが揃ったときのメッセージ受信
+            String ready = (String) ois.readObject();        //プレイヤーが揃ったときのメッセージ受信
             System.out.println(ready);
             ctrl.sendMessageToGUI(ready);
 
             boolean loop = true;
             while (loop) {
                 input = 0;
-                recieve = (String)ois.readObject();
+                recieve = (String) ois.readObject();
                 System.out.println(recieve);
                 ctrl.sendMessageToGUI(recieve);
-                while( ! (1 <= input && input <= 6) ) {
+                while (!(1 <= input && input <= 6)) {
                     System.out.print("1 - 6から選んでください >");
                     input = Integer.parseInt(reader.readLine());
                 }
@@ -76,8 +82,7 @@ public class PK_ClientRunnable implements  Runnable{
                 oos.writeObject(send);
                 oos.flush();
             }
-        }
-        catch (java.net.SocketException soe) {
+        } catch (java.net.SocketException soe) {
             soe.printStackTrace();
         } catch (IOException e) {
             System.err.println("エラー");

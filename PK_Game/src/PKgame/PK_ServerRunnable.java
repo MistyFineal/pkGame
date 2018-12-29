@@ -74,6 +74,7 @@ public class PK_ServerRunnable implements Runnable{
                 i++;
             } catch (Exception e) {
                 System.err.println("接続時にエラーが発生したのでプログラムを終了します");
+                loop = false;
                 e.printStackTrace();
                 if (pks != null) {
                     try {
@@ -85,6 +86,7 @@ public class PK_ServerRunnable implements Runnable{
                 }
             }
         }
+
         try {
             server.close();
         } catch (IOException e) {

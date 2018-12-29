@@ -10,9 +10,6 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    //protected static FXMLLoader loader = new FXMLLoader();
-
-
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("sample_pkgame.fxml"));
