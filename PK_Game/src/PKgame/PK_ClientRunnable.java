@@ -1,14 +1,7 @@
 package PKgame;
 
-
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,14 +11,16 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 
-public class PK_ClientRunnable implements  Runnable{
+public class PK_ClientRunnable extends Task<Void> implements Runnable{
     private Socket soc;
-    Controller ctrl;
+    private Controller ctrl;
+    private String message;
 
 
     public PK_ClientRunnable(Socket socket, Controller c) {
         this.soc = socket;
         this.ctrl = c;
+        this.message = null;
         Thread th = new Thread(this, "th-" + soc.getInetAddress().toString());
         th.start();
     }
@@ -33,6 +28,15 @@ public class PK_ClientRunnable implements  Runnable{
 
     @Override
     public void run() {
+        try {
+            call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected Void call() throws Exception {
         BufferedReader reader = null;
         Socket socket = null;
         ObjectOutputStream oos = null;
@@ -66,14 +70,16 @@ public class PK_ClientRunnable implements  Runnable{
 
             String ready = (String) ois.readObject();        //プレイヤーが揃ったときのメッセージ受信
             System.out.println(ready);
-            ctrl.sendMessageToGUI(ready);
+            Platform.runLater(() ->ctrl.sendMessageToGUI(ready));
+            String ready2 = (String) ois.readObject();        //プレイヤーが揃ったときのメッセージ受信
+            System.out.println(ready2);
+            Platform.runLater(() ->ctrl.sendMessageToGUI(ready2));
 
             boolean loop = true;
             while (loop) {
                 input = 0;
                 recieve = (String) ois.readObject();
                 System.out.println(recieve);
-                ctrl.sendMessageToGUI(recieve);
                 while (!(1 <= input && input <= 6)) {
                     System.out.print("1 - 6から選んでください >");
                     input = Integer.parseInt(reader.readLine());
@@ -120,6 +126,7 @@ public class PK_ClientRunnable implements  Runnable{
                 e.printStackTrace();
             }
         }
+        return null;
     }
 
 }

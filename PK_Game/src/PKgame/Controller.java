@@ -28,7 +28,6 @@ public class Controller implements Initializable {
 
     private ObservableList<String> items;
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         pkClient = null;
@@ -49,6 +48,7 @@ public class Controller implements Initializable {
                 Socket socket = new  Socket(serverName, 5572);
 
                 pkClient = new PK_ClientRunnable(socket, this);
+
                 ok_Button.setVisible(false);
                 decision_Button.setVisible(true);
                 titleText.setVisible(false);

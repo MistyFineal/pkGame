@@ -104,25 +104,22 @@ public class PK_ServerRunnable implements Runnable{
             System.out.println("Thread-" + tNum + " : プレイヤーが揃いました.  ゲームを開始します");
             setOos1(new ObjectOutputStream(p1Socket.getOutputStream()));
             setOos2(new ObjectOutputStream(p2Socket.getOutputStream()));
-            setSendMessageToP1("プレイヤーが揃いました.  ゲームを開始します\n");
-            setSendMessageToP2("プレイヤーが揃いました.  ゲームを開始します\n");
+            setSendMessageToP1("プレイヤーが揃いました.  ゲームを開始します");
+            setSendMessageToP2("プレイヤーが揃いました.  ゲームを開始します");
             getOos1().writeObject(getSendMessageToP1());
             getOos1().flush();
             getOos2().writeObject(getSendMessageToP2());
             getOos2().flush();
-            setSendMessageToP1("あなたはPlayer1です.\nシュートする場所を選択してください\n");
-            setSendMessageToP2("あなたはPlayer2です.\n防衛する場所を選択してください\n");
+            setSendMessageToP1("あなたはPlayer1です.");
+            setSendMessageToP2("あなたはPlayer2です.");
             getOos1().writeObject(getSendMessageToP1());
             getOos2().writeObject(getSendMessageToP2());
             getOos1().flush();
             getOos2().flush();
-            setOis1(new ObjectInputStream(p1Socket.getInputStream()));
-            setOis2(new ObjectInputStream(p2Socket.getInputStream()));
 
             boolean loop = true;
-            while(loop) {
 
-            }
+            PK_GameController gc = new PK_GameController(this, p1Socket, p2Socket);
 
             //終了処理
             getOos1().close();
