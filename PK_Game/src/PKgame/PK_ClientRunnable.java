@@ -71,9 +71,12 @@ public class PK_ClientRunnable extends Task<Void> implements Runnable{
             String ready = (String) ois.readObject();        //プレイヤーが揃ったときのメッセージ受信
             System.out.println(ready);
             Platform.runLater(() ->ctrl.sendMessageToGUI(ready));
-            String ready2 = (String) ois.readObject();        //プレイヤーが揃ったときのメッセージ受信
+            String ready2 = (String) ois.readObject();        //プレイヤーが揃ったときのメッセージ受信2
             System.out.println(ready2);
             Platform.runLater(() ->ctrl.sendMessageToGUI(ready2));
+
+            Platform.runLater(() -> ctrl.setKeeper(3));         //キーパーを初期位置に表示
+
 
             boolean loop = true;
             while (loop) {

@@ -25,6 +25,7 @@ public class Controller implements Initializable {
     @FXML private ListView listView;
     @FXML private PK_ClientRunnable pkClient;
     @FXML private ImageView goalView;
+    @FXML private ImageView keeperView;
 
     private ObservableList<String> items;
 
@@ -33,6 +34,8 @@ public class Controller implements Initializable {
         pkClient = null;
         titleText.setVisible(true);
         goalView.setVisible(false);
+        keeperView.setVisible(false);
+
         items = FXCollections.observableArrayList();
         listView.setItems(items);
         listView.getItems().add("接続するサーバのIPアドレスを入力し, ゲーム開始ボタンを押してください.");
@@ -67,6 +70,11 @@ public class Controller implements Initializable {
     public void sendMessageToGUI(String msg) {
         listView.getItems().add(msg);
         listView.scrollTo(listView.getItems().size()-1);
+    }
+
+    public void setKeeper(int n) {
+        keeperView.setVisible(true);
+
     }
 
 
