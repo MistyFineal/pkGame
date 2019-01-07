@@ -121,6 +121,8 @@ public class PK_ServerRunnable implements Runnable{
 
             PK_GameController gc = new PK_GameController(this, p1Socket, p2Socket);
 
+            System.out.println("ゲーム終了");
+
             //終了処理
             getOos1().close();
             getOis1().close();

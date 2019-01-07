@@ -5,7 +5,6 @@ import javafx.concurrent.Task;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -15,12 +14,14 @@ public class PK_ClientRunnable extends Task<Void> implements Runnable{
     private Socket soc;
     private Controller ctrl;
     private String message;
+    private int input;
 
 
     public PK_ClientRunnable(Socket socket, Controller c) {
         this.soc = socket;
         this.ctrl = c;
         this.message = null;
+        this.input = 0;
         Thread th = new Thread(this, "th-" + soc.getInetAddress().toString());
         th.start();
     }
@@ -43,17 +44,10 @@ public class PK_ClientRunnable extends Task<Void> implements Runnable{
         ObjectInputStream ois = null;
 
         try {
-            //reader = new BufferedReader(new InputStreamReader(System.in));
-            //System.out.print("Server name? >");
-            //String serverName = reader.readLine();
-            //String serverName = ipAddress;
-            //socket = new Socket(serverName, 5572);
             socket = this.soc;
             System.out.println("サーバへの接続成功");
             Platform.runLater(() -> ctrl.sendMessageToGUI("サーバへの接続成功"));
-            //ctrl.sendMessageToGUI("サーバへの接続成功");
             System.out.println("他のプレイヤーを待機しています");
-            //ctrl.sendMessageToGUI("他のプレイヤーを待機しています");
             Platform.runLater(() ->ctrl.sendMessageToGUI("他のプレイヤーを待機しています"));
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,8 +55,8 @@ public class PK_ClientRunnable extends Task<Void> implements Runnable{
 
 
         Integer send;
-        String recieve;
-        int input;
+        String msgFromServ = "";
+
         try {
             ois = new ObjectInputStream((socket.getInputStream()));
             oos = new ObjectOutputStream(socket.getOutputStream());
@@ -76,21 +70,71 @@ public class PK_ClientRunnable extends Task<Void> implements Runnable{
             Platform.runLater(() ->ctrl.sendMessageToGUI(ready2));
 
             Platform.runLater(() -> ctrl.setKeeper(3));         //キーパーを初期位置に表示
+            Platform.runLater(() -> ctrl.setVisibleForCircles(true));
 
 
             boolean loop = true;
+            int loopCounter = 0;
             while (loop) {
+                loopCounter++;
+                if (loopCounter % 2 != 0)   Platform.runLater(() -> ctrl.turnCountUp());
+                if (loopCounter == 15) Platform.runLater(() -> ctrl.isSuddenDeathTrue());
+
                 input = 0;
-                recieve = (String) ois.readObject();
-                System.out.println(recieve);
+                msgFromServ = (String) ois.readObject();
+                System.out.println(msgFromServ);
+                String finalMsgFromServ = msgFromServ;
+                Platform.runLater(() -> ctrl.sendMessageToGUI(finalMsgFromServ));
+
+
                 while (!(1 <= input && input <= 6)) {
-                    System.out.print("1 - 6から選んでください >");
-                    input = Integer.parseInt(reader.readLine());
+                    Thread.sleep(50);//選択が決定するまでなにもせずに待つ
                 }
+
+
                 send = new Integer(input);
                 oos.writeObject(send);
                 oos.flush();
+
+                int finalInput = input;
+
+
+                msgFromServ = (String) ois.readObject();
+                System.out.println(msgFromServ);
+                String finalMsgResultFromServ = msgFromServ;
+                Platform.runLater(() -> ctrl.sendMessageToGUI(finalMsgResultFromServ));
+
+                String numTemp = (String)ois.readObject();
+                boolean isAttack;
+                int enemySelectedNum = Integer.parseInt(numTemp);
+                if (finalMsgFromServ.equals("シュートする場所を選択してください")) {
+                    isAttack = true;
+                    Platform.runLater(() -> ctrl.shootedView(finalInput, enemySelectedNum));
+                } else {
+                    isAttack = false;
+                    Platform.runLater(() -> ctrl.shootedView(enemySelectedNum, finalInput));
+                }
+
+                Thread.sleep(1000);
+
+                boolean isFinalAttack = isAttack;
+
+                int mySelectedNum = finalInput;
+                Platform.runLater(() -> ctrl.setPointToLabel(isFinalAttack, mySelectedNum, enemySelectedNum));
+
+                if (loopCounter % 2 == 0) {
+                    String isLoop = (String)ois.readObject();
+                    if (isLoop.equals("false"))     loop = false;
+                }
+
+                Platform.runLater(() -> ctrl.selectClear());
             }
+
+            String battleResult = (String)ois.readObject();
+            System.out.println(battleResult);
+            Platform.runLater(() -> ctrl.sendMessageToGUI(battleResult));
+
+
         } catch (java.net.SocketException soe) {
             soe.printStackTrace();
         } catch (IOException e) {
@@ -132,4 +176,8 @@ public class PK_ClientRunnable extends Task<Void> implements Runnable{
         return null;
     }
 
+
+    public void setInput(int n) {
+        this.input = n;
+    }
 }

@@ -8,6 +8,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PKgame.Controller">
@@ -23,12 +24,146 @@
             <TextField fx:id="text_Field" layoutX="456.0" layoutY="352.0" />
             <ListView fx:id="listView" layoutY="266.0" prefHeight="134.0" prefWidth="401.0" />
             <Button fx:id="decision_Button" layoutX="511.0" layoutY="301.0" mnemonicParsing="false" onAction="#decision_Click" text="決定" visible="false" />
-            <ImageView fx:id="goalView" fitHeight="243.0" fitWidth="517.0" layoutX="74.0" layoutY="23.0" pickOnBounds="true" visible="false">
+            <ImageView fx:id="goalView" fitHeight="243.0" fitWidth="517.0" layoutX="74.0" layoutY="23.0" pickOnBounds="true">
                <image>
                   <Image url="@../img/soccer_goal.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="233.0" layoutY="108.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="keeperView" fitHeight="215.0" fitWidth="235.0" layoutX="218.0" layoutY="77.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../img/soccer_goalee_man.png" />
+               </image></ImageView>
+            <Circle fx:id="c1" fill="#ff2121" layoutX="168.0" layoutY="91.0" onMouseClicked="#selectC1" opacity="0.3" radius="33.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="1.5" AnchorPane.bottomAnchor="276.0" AnchorPane.leftAnchor="135.0" AnchorPane.rightAnchor="439.0" AnchorPane.topAnchor="58.0" />
+            <Circle fx:id="c2" fill="#ff2121" layoutX="333.0" layoutY="91.0" onMouseClicked="#selectC2" opacity="0.3" radius="33.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="1.5" />
+            <Circle fx:id="c3" fill="#ff2121" layoutX="489.0" layoutY="91.0" onMouseClicked="#selectC3" opacity="0.3" radius="33.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="1.5" />
+            <Circle fx:id="c5" fill="#ff2121" layoutX="336.0" layoutY="209.0" onMouseClicked="#selectC5" opacity="0.3" radius="33.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="1.5" />
+            <Circle fx:id="c4" fill="#ff2121" layoutX="168.0" layoutY="209.0" onMouseClicked="#selectC4" opacity="0.3" radius="33.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="1.5" />
+            <Circle fx:id="c6" fill="#ff2121" layoutX="489.0" layoutY="209.0" onMouseClicked="#selectC6" opacity="0.3" radius="33.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="1.5" />
+            <ImageView fx:id="ballView1" fitHeight="36.0" fitWidth="34.0" layoutX="151.0" layoutY="74.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../img/sport_soccerball.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="ballView2" fitHeight="36.0" fitWidth="34.0" layoutX="316.0" layoutY="74.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../img/sport_soccerball.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="ballView3" fitHeight="36.0" fitWidth="34.0" layoutX="472.0" layoutY="74.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../img/sport_soccerball.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="ballView4" fitHeight="36.0" fitWidth="34.0" layoutX="151.0" layoutY="192.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../img/sport_soccerball.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="ballView5" fitHeight="36.0" fitWidth="34.0" layoutX="319.0" layoutY="192.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../img/sport_soccerball.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="ballView6" fitHeight="36.0" fitWidth="34.0" layoutX="472.0" layoutY="192.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../img/sport_soccerball.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="you" layoutX="36.0" layoutY="52.0" prefHeight="50.0" prefWidth="50.0" text="You">
+               <font>
+                  <Font name="Georgia" size="19.0" />
+               </font>
+            </Label>
+            <Label fx:id="enemy" layoutX="564.0" layoutY="52.0" prefHeight="50.0" prefWidth="66.0" text="Enemy">
+               <font>
+                  <Font name="Georgia" size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="yourPoint" alignment="CENTER" contentDisplay="CENTER" layoutX="34.0" layoutY="91.0" prefHeight="36.0" prefWidth="40.0" text="0" textAlignment="CENTER">
+               <font>
+                  <Font name="Georgia" size="28.0" />
+               </font>
+            </Label>
+            <Label fx:id="enemyPoint" alignment="CENTER" contentDisplay="CENTER" layoutX="571.0" layoutY="91.0" prefHeight="36.0" prefWidth="40.0" text="0" textAlignment="CENTER">
+               <font>
+                  <Font name="Georgia" size="28.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="keeperF1" fitHeight="163.0" fitWidth="176.0" layoutX="130.0" layoutY="52.0" pickOnBounds="true" visible="false">
+               <image>
+                  <Image url="@../img/soccer_catch2.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="keeperF2" fitHeight="163.0" fitWidth="176.0" layoutX="212.0" layoutY="63.0" pickOnBounds="true" rotate="23.2" visible="false">
+               <image>
+                  <Image url="@../img/soccer_catch3.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="keeperF3" fitHeight="163.0" fitWidth="176.0" layoutX="358.0" layoutY="52.0" pickOnBounds="true" visible="false">
+               <image>
+                  <Image url="@../img/soccer_catch1.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="keeperF5" fitHeight="163.0" fitWidth="176.0" layoutX="313.0" layoutY="145.0" pickOnBounds="true" visible="false">
+               <image>
+                  <Image url="@../img/soccer_catch5.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="keeperF4" fitHeight="163.0" fitWidth="176.0" layoutX="144.0" layoutY="145.0" pickOnBounds="true" visible="false">
+               <image>
+                  <Image url="@../img/soccer_catch5.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="keeperF6" fitHeight="163.0" fitWidth="176.0" layoutX="343.0" layoutY="134.0" pickOnBounds="true" visible="false">
+               <image>
+                  <Image url="@../img/soccer_catch4.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="keeperS1" fitHeight="163.0" fitWidth="176.0" layoutX="130.0" layoutY="52.0" pickOnBounds="true" visible="false">
+               <image>
+                  <Image url="@../img/soccer_catchS2.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="keeperS2" fitHeight="163.0" fitWidth="176.0" layoutX="270.0" layoutY="72.0" pickOnBounds="true" rotate="26.6" visible="false">
+               <image>
+                  <Image url="@../img/soccer_catchS2.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="keeperS3" fitHeight="163.0" fitWidth="176.0" layoutX="358.0" layoutY="53.0" pickOnBounds="true" visible="false">
+               <image>
+                  <Image url="@../img/soccer_catchS1.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="keeperS5" fitHeight="163.0" fitWidth="176.0" layoutX="306.0" layoutY="134.0" pickOnBounds="true" visible="false">
+               <image>
+                  <Image url="@../img/soccer_catchS5.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="keeperS4" fitHeight="163.0" fitWidth="176.0" layoutX="144.0" layoutY="134.0" pickOnBounds="true" visible="false">
+               <image>
+                  <Image url="@../img/soccer_catchS5.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="keeperS6" fitHeight="163.0" fitWidth="176.0" layoutX="350.0" layoutY="134.0" pickOnBounds="true" visible="false">
+               <image>
+                  <Image url="@../img/soccer_catchS4.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="turn" layoutX="266.0" layoutY="5.0" text=" Turn : ">
+               <font>
+                  <Font name="Georgia" size="31.0" />
+               </font>
+            </Label>
+            <Label fx:id="turnNum" layoutX="369.0" layoutY="5.0" text="0">
+               <font>
+                  <Font name="Georgia" size="31.0" />
+               </font>
+            </Label>
+            <Label fx:id="sudden" layoutX="225.0" layoutY="5.0" text="Sudden Death !!" textFill="RED" visible="false">
+               <font>
+                  <Font name="Georgia" size="31.0" />
+               </font>
+            </Label>
       </children>
     </AnchorPane>
   </children>
